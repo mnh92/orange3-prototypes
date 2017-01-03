@@ -1,4 +1,7 @@
 import collections
+import pylab as pl
+import math
+import numpy as np
 
 from PyQt4.QtCore import Qt
 from Orange.data import Table
@@ -29,8 +32,11 @@ class OWChaosGame(widget.OWWidget):
     inputs = [("Sequence", Table, "set_data")]
     outputs = []
 
-    kmer_length = settings.Setting(KMER_LENGTHS[0][1])
-    scoring = settings.Setting(SCORINGS[0][1])
+    #kmer_length = settings.Setting(KMER_LENGTHS[0][1])
+    #scoring = settings.Setting(SCORINGS[0][1])
+    kmer_length = 2
+    scoring = 0
+    chaos = np.empty
 
     def __init__(self):
         super().__init__()
@@ -60,9 +66,37 @@ class OWChaosGame(widget.OWWidget):
 
     def set_data(self, data):
         self.sequence = ''.join([d.list[0] for d in data])
+        self.cgr()
 
-    def raw_count(self):
+    def __raw_count(self):
         count = collections.defaultdict(int)
         for i in range(len(self.sequence) - (self.kmer_length - 1)):
             count[self.sequence[i:i + self.kmer_length]] += 1
         return count
+
+    def cgr(self):
+        size = int(math.sqrt(4**self.kmer_length))
+        chaos = np.zeros((size, size))
+
+        #TODO: switch for probabilities, log-odds...
+        probs = self.__raw_count()
+
+        for kmer, prob in probs.items():
+            x_max = size
+            y_max = size
+            x_pos = 1
+            y_pos = 1
+
+            for c in kmer:
+                if c == 'T':
+                    x_pos += x_max / 2
+                elif c == 'C':
+                    y_pos += y_max / 2
+                elif c == 'G':
+                    x_pos += x_max / 2
+                    y_pos += y_max / 2
+
+                x_max /= 2
+                y_max /= 2
+            chaos[int(x_pos) - 1, int(y_pos) - 1] = prob
+        self.chaos = chaos
