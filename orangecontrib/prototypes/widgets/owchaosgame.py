@@ -1,3 +1,5 @@
+import collections
+
 from PyQt4.QtCore import Qt
 from Orange.data import Table
 from Orange.widgets import widget, gui, settings
@@ -22,9 +24,9 @@ class OWChaosGame(widget.OWWidget):
     name = "Chaos Game"
     description = ""
     icon = ""
-    priority = 3000
+    priority = 9999
 
-    inputs = [("Sequence", Table, "set_input_sequence")]
+    inputs = [("Sequence", Table, "set_data")]
     outputs = []
 
     kmer_length = settings.Setting(KMER_LENGTHS[0][1])
@@ -34,6 +36,7 @@ class OWChaosGame(widget.OWWidget):
         super().__init__()
 
         self.controlBox = gui.widgetBox(self.controlArea, 'Controls')
+        self.sequence = None
 
         def _on_kmer_length_changed():
             pass
@@ -53,7 +56,13 @@ class OWChaosGame(widget.OWWidget):
                      items=[i[0] for i in SCORINGS],
                      callback=_on_scoring_changed())
 
-    def set_input_sequence(self, sequence):
-        pass
+        self.infoLabel = gui.widgetLabel(self.controlBox, label='No input')
 
+    def set_data(self, data):
+        self.sequence = ''.join([d.list[0] for d in data])
 
+    def raw_count(self):
+        count = collections.defaultdict(int)
+        for i in range(len(self.sequence) - (self.kmer_length - 1)):
+            count[self.sequence[i:i + self.kmer_length]] += 1
+        return count

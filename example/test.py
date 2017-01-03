@@ -1,7 +1,8 @@
 import collections
 import math
-from matplotlib import cm
-import pylab
+#from matplotlib import cm
+#import pylab
+import Orange
 
 f = open("Escherichia coli.fasta")
 s1 = f.read()
@@ -57,6 +58,7 @@ def chaos_game(probabilities, k):
 
     return chaos
 
+"""
 f3 = count_kmers(data, 3)
 f4 = count_kmers(data, 6)
 
@@ -75,6 +77,8 @@ pylab.show()
 
 """
 
+"""
+
 chaos_k3 = chaos_game(f3_prob, 3)
 pylab.title('Chaos game representation for 3-mers')
 pylab.imshow(chaos_k3, interpolation='nearest', cmap=cm.gray_r)
@@ -88,3 +92,9 @@ print(f4_prob)
 print(f3_log)
 print(f4_log)
 """
+
+with open('test_file.csv') as file:
+    data = Orange.data.Table('test_file.csv')
+
+    print(data)
+
