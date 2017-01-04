@@ -22,6 +22,7 @@ SCORINGS = (
     ('log odds', 2)
 )
 
+
 class OWChaosGame(widget.OWWidget):
     name = "Chaos Game"
     description = ""
@@ -31,20 +32,23 @@ class OWChaosGame(widget.OWWidget):
     inputs = [("Sequence", Table, "set_data")]
     outputs = []
 
-    kmer_length = settings.Setting(KMER_LENGTHS[0][1])
-    scoring = settings.Setting(SCORINGS[0][1])
+    kmer_length_idx = settings.Setting(0)
+    scoring_idx = settings.Setting(0)
 
     def __init__(self):
         super().__init__()
+
+        self.kmer_length = self.__get_kmer_length_selected()
 
         self.controlBox = gui.widgetBox(self.controlArea, 'Controls')
         self.sequence = None
         self.chaos = np.zeros
 
         def _on_kmer_length_changed():
-            self.__cgr()
+            self.kmer_length = self.__get_kmer_length_selected()
+            self.plot_cgr()
 
-        gui.comboBox(self.controlBox, self, 'kmer_length',
+        gui.comboBox(self.controlBox, self, 'kmer_length_idx',
              orientation=Qt.Horizontal,
              label='Kmer length:',
              items=[i[0] for i in KMER_LENGTHS],
@@ -53,7 +57,7 @@ class OWChaosGame(widget.OWWidget):
         def _on_scoring_changed():
             self.plot_cgr()
 
-        gui.comboBox(self.controlBox, self, 'scoring',
+        gui.comboBox(self.controlBox, self, 'scoring_idx',
              orientation=Qt.Horizontal,
              label='Scoring:',
              items=[i[0] for i in SCORINGS],
@@ -72,8 +76,10 @@ class OWChaosGame(widget.OWWidget):
         self.mainArea.layout().addWidget(self.imview)
         self.plot_cgr()
 
+    def __get_kmer_length_selected(self):
+        return KMER_LENGTHS[self.kmer_length_idx][1]
+
     def set_data(self, data):
-        self.imview.clear()
         self.sequence = ''.join([d.list[0] for d in data])
         self.plot_cgr()
 
