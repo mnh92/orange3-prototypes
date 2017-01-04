@@ -51,13 +51,13 @@ class OWChaosGame(widget.OWWidget):
              callback=_on_kmer_length_changed)
 
         def _on_scoring_changed():
-            pass
+            self.plot_cgr()
 
         gui.comboBox(self.controlBox, self, 'scoring',
              orientation=Qt.Horizontal,
              label='Scoring:',
              items=[i[0] for i in SCORINGS],
-             callback=_on_scoring_changed())
+             callback=_on_scoring_changed)
 
         self.imview = pg.ImageView()
 
@@ -70,17 +70,27 @@ class OWChaosGame(widget.OWWidget):
         self.imview.setColorMap(colormap)
 
         self.mainArea.layout().addWidget(self.imview)
+        self.plot_cgr()
 
     def set_data(self, data):
         self.imview.clear()
         self.sequence = ''.join([d.list[0] for d in data])
+        self.plot_cgr()
 
     def __cgr(self):
-        #TODO: switch for probabilities, log-odds..
-        probabilities = chaosgame.raw_count(self.sequence, self.kmer_length)
+        if self.scoring == 0:
+            probabilities = chaosgame.raw_count(self.sequence, self.kmer_length)
+        elif self.scoring == 1:
+            probabilities = chaosgame.probabilities(self.sequence, self.kmer_length)
+        else:
+            probabilities = chaosgame.log_odds(self.sequence, self.kmer_length)
+
         chaos = chaosgame.cgr(probabilities, self.kmer_length)
         return chaos
 
     def plot_cgr(self):
+        if self.sequence is None:
+            return
+        self.imview.clear()
         chaos = self.__cgr()
         self.imview.setImage(chaos)

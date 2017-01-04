@@ -13,7 +13,8 @@ def raw_count(sequence, kmer_length):
 def probabilities(sequence, kmer_length):
     probs = collections.defaultdict(float)
     l = len(sequence)
-    for k, v in sequence.items():
+    counts = raw_count(sequence, kmer_length)
+    for k, v in counts.items():
         probs[k] = float(v) / (l - kmer_length + 1)
     return probs
 
@@ -21,7 +22,8 @@ def probabilities(sequence, kmer_length):
 def log_odds(sequence, kmer_length):
     logOdd = collections.defaultdict(float)
     l = len(sequence)
-    for k, v in sequence.items():
+    counts = raw_count(sequence, kmer_length)
+    for k, v in counts.items():
         logOdd[k] = math.log((v / (l - kmer_length + 1)))
     return logOdd
 
