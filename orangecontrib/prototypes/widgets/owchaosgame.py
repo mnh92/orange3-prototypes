@@ -84,9 +84,9 @@ class OWChaosGame(widget.OWWidget):
         self.plot_cgr()
 
     def __cgr(self):
-        if self.scoring == 0:
+        if self.scoring_idx == 0:
             probabilities = chaosgame.raw_count(self.sequence, self.kmer_length)
-        elif self.scoring == 1:
+        elif self.scoring_idx == 1:
             probabilities = chaosgame.probabilities(self.sequence, self.kmer_length)
         else:
             probabilities = chaosgame.log_odds(self.sequence, self.kmer_length)
