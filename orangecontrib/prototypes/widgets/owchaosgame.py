@@ -11,26 +11,20 @@ from PyQt4.QtCore import Qt
 from Orange.data import Table
 from Orange.widgets import widget, gui, settings
 
-"""
+
 KMER_LENGTHS = (
-        ('2', 2),
-        ('3', 3),
-        ('4', 4),
-        ('5', 5),
-        ('6', 6)
-    )
+    ('2', 2),
+    ('3', 3),
+    ('4', 4),
+    ('5', 5),
+    ('6', 6)
+)
 
 SCORINGS = (
     ('raw count', 0),
     ('probability', 1),
     ('log odds', 2)
 )
-"""
-class KmerLengths:
-    two, three, four, five, six = range(5)
-
-class Scorings:
-    raw_count, probability, log_odds = range(3)
 
 class OWChaosGame(widget.OWWidget):
     name = "Chaos Game"
@@ -44,8 +38,11 @@ class OWChaosGame(widget.OWWidget):
     #kmer_length = settings.Setting(KmerLengths.two)
     #scoring = settings.Setting(Scorings.raw_count)
 
-    kmer_length = KmerLengths.two
-    scoring = Scorings.raw_counts
+    kmer_length = settings.Setting(KMER_LENGTHS[0][1])
+    scoring = settings.Setting(SCORINGS[0][1])
+
+
+
 
     def __init__(self):
         super().__init__()
@@ -53,27 +50,29 @@ class OWChaosGame(widget.OWWidget):
         self.controlBox = gui.widgetBox(self.controlArea, 'Controls')
         self.sequence = None
 
-    def _on_kmer_length_changed():
+        def _on_kmer_length_changed():
+            self.cgr()
+
+        gui.comboBox(self.controlBox, self, 'kmer_length',
+             orientation=Qt.Horizontal,
+             label='Kmer length:',
+             items=[i[0] for i in KMER_LENGTHS],
+             callback=_on_kmer_length_changed)
+
+        def _on_scoring_changed():
             pass
 
-    gui.comboBox(self.controlBox, self, 'kmer_length',
-                 orientation=Qt.Horizontal,
-                 label='Kmer length:',
-                 items=[i[0] for i in KmerLengths],
-                 callback=_on_kmer_length_changed)
-
-    def _on_scoring_changed():
-        pass
-
-    gui.comboBox(self.controlBox, self, 'scoring',
-                 orientation=Qt.Horizontal,
-                 label='Scoring:',
-                 items=[i[0] for i in Scorings],
-                 callback=_on_scoring_changed())
+        gui.comboBox(self.controlBox, self, 'scoring',
+             orientation=Qt.Horizontal,
+             label='Scoring:',
+             items=[i[0] for i in SCORINGS],
+             callback=_on_scoring_changed())
 
     def set_data(self, data):
         self.sequence = ''.join([d.list[0] for d in data])
         self.cgr()
+
+
 
     def cgr(self):
         #TODO: switch for probabilities, log-odds..
