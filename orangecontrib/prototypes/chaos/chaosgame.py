@@ -11,11 +11,19 @@ def raw_count(sequence, kmer_length):
 
 
 def probabilities(sequence, kmer_length):
-    pass
+    probs = collections.defaultdict(float)
+    l = len(sequence)
+    for k, v in sequence.items():
+        probs[k] = float(v) / (l - kmer_length + 1)
+    return probs
 
 
 def log_odds(sequence, kmer_length):
-    pass
+    logOdd = collections.defaultdict(float)
+    l = len(sequence)
+    for k, v in sequence.items():
+        logOdd[k] = math.log((v / (l - kmer_length + 1)))
+    return logOdd
 
 
 def cgr(probabilities, kmer_length):
