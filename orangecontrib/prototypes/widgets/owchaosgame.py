@@ -1,12 +1,8 @@
 import numpy as np
+import pyqtgraph as pg
 
-from PyQt4.QtCore import Qt
-from Orange.data import Table
-from Orange.widgets import widget, gui, settings
 from ..chaos import chaosgame
 
-import collections
-from enum import Enum
 from PyQt4.QtCore import Qt
 from Orange.data import Table
 from Orange.widgets import widget, gui, settings
@@ -35,23 +31,18 @@ class OWChaosGame(widget.OWWidget):
     inputs = [("Sequence", Table, "set_data")]
     outputs = []
 
-    #kmer_length = settings.Setting(KmerLengths.two)
-    #scoring = settings.Setting(Scorings.raw_count)
-
     kmer_length = settings.Setting(KMER_LENGTHS[0][1])
     scoring = settings.Setting(SCORINGS[0][1])
-
-
-
 
     def __init__(self):
         super().__init__()
 
         self.controlBox = gui.widgetBox(self.controlArea, 'Controls')
         self.sequence = None
+        self.chaos = np.zeros
 
         def _on_kmer_length_changed():
-            self.cgr()
+            self.__cgr()
 
         gui.comboBox(self.controlBox, self, 'kmer_length',
              orientation=Qt.Horizontal,
@@ -68,13 +59,28 @@ class OWChaosGame(widget.OWWidget):
              items=[i[0] for i in SCORINGS],
              callback=_on_scoring_changed())
 
+        self.imview = pg.ImageView()
+
+        colors = [
+            (255, 255, 255),
+            (0, 0, 0)
+        ]
+
+        colormap = pg.ColorMap(pos=np.linspace(0.0, 1.0, 2), color=colors)
+        self.imview.setColorMap(colormap)
+
+        self.mainArea.layout().addWidget(self.imview)
+
     def set_data(self, data):
+        self.imview.clear()
         self.sequence = ''.join([d.list[0] for d in data])
-        self.cgr()
 
-
-
-    def cgr(self):
+    def __cgr(self):
         #TODO: switch for probabilities, log-odds..
         probabilities = chaosgame.raw_count(self.sequence, self.kmer_length)
-        self.chaos = chaosgame.cgr(probabilities, self.kmer_length)
+        chaos = chaosgame.cgr(probabilities, self.kmer_length)
+        return chaos
+
+    def plot_cgr(self):
+        chaos = self.__cgr()
+        self.imview.setImage(chaos)
