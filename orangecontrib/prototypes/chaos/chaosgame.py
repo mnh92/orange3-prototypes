@@ -10,6 +10,14 @@ def raw_count(sequence, kmer_length):
     return count
 
 
+def probabilities(sequence, kmer_length):
+    pass
+
+
+def log_odds(sequence, kmer_length):
+    pass
+
+
 def cgr(probabilities, kmer_length):
     size = int(math.sqrt(4 ** kmer_length))
     chaos = np.zeros((size, size))
