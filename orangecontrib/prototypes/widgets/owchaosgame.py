@@ -81,15 +81,13 @@ class OWChaosGame(widget.OWWidget):
 
     def set_data(self, data):
         typerrmsg = 'Invalid data type! This widget is expecting strings.'
+        self.error()
+        self.imview.clear()
 
         # In data error checking.
         if data == None:
             return
-        elif data.domain.variables == ():
-            if any(type(d.list[0]) != str for d in data):
-                self.error(typerrmsg)
-                return
-        elif type(data.domain.variables[0]) != StringVariable:
+        elif any(type(d.list[0]) != str for d in data):
             self.error(typerrmsg)
             return
 
