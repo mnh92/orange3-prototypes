@@ -4,7 +4,7 @@ import pyqtgraph as pg
 from ..chaos import chaosgame
 
 from PyQt4.QtCore import Qt
-from Orange.data import Table
+from Orange.data import Table, StringVariable
 from Orange.widgets import widget, gui, settings
 
 
@@ -80,6 +80,19 @@ class OWChaosGame(widget.OWWidget):
         return KMER_LENGTHS[self.kmer_length_idx][1]
 
     def set_data(self, data):
+        typerrmsg = 'Invalid data type! This widget is expecting strings.'
+
+        # In data error checking.
+        if data == None:
+            return
+        elif data.domain.variables == ():
+            if any(type(d.list[0]) != str for d in data):
+                self.error(typerrmsg)
+                return
+        elif type(data.domain.variables[0]) != StringVariable:
+            self.error(typerrmsg)
+            return
+
         self.sequence = ''.join([d.list[0] for d in data])
         self.plot_cgr()
 
