@@ -26,7 +26,7 @@ SCORINGS = (
 class OWChaosGame(widget.OWWidget):
     name = "Chaos Game"
     description = ""
-    icon = ""
+    icon = "icons/Chaosgame.svg"
     priority = 9999
 
     inputs = [("Sequence", Table, "set_data")]
