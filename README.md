@@ -23,7 +23,7 @@ bottom left and T in the bottom right. Each quadrant is split
 according to the same principle for the next character in the k-mer,
 recursively, which can be seen in the next picture:
 
-![alt tag](http://www.lifenscience.com/_/rsrc/1237350858692/bioinformatics/chaos-game-representation/game16.PNG)
+![alt tag](http://i.imgur.com/L4Wr3sz.png )
 
 The k-mers in the given sequence are counted and the image is colored accordingly.
 For example, here is a part of the 6-mer Chaos Game Representation, where the 6-mer
