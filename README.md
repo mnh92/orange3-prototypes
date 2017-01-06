@@ -50,5 +50,6 @@ the value of each cell in the image is calculated:
 * log odds - The cells are colored according to the logarithm of the
   probability of each k-mer.
 
-Note that all these counting schemes yield very similar images with
-different scales.
+Note that all the first two counting methods produce the same image
+with different scales, while the third empasizes the differences
+between the counts.
