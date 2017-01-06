@@ -29,8 +29,17 @@ image is colored accordingly.
 
 _tukaj primer CGRja_
 
-The widget allow three different counting schemes that determine the
-value of each cell in the image:
+The Widget
+----------
+
+The widget has two controls, one for setting the k-mer length and
+another for setting the counting scheme.
+
+Setting the k-mer length changes the length (k) of the k-mers being
+counted. A higher k will produce an image with more cells.
+
+The widget allows three different counting schemes that determine how
+the value of each cell in the image is calculated:
 
 * raw count - The cells are colored according to the number of
   instances of each k-mer found.

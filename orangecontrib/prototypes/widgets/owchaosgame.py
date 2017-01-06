@@ -25,7 +25,7 @@ SCORINGS = (
 
 class OWChaosGame(widget.OWWidget):
     name = "Chaos Game"
-    description = ""
+    description = "Visualize genome data with the Chaos Game Representation."
     icon = "icons/Chaosgame.svg"
     priority = 9999
 
@@ -42,7 +42,6 @@ class OWChaosGame(widget.OWWidget):
 
         self.controlBox = gui.widgetBox(self.controlArea, 'Controls')
         self.sequence = None
-        self.chaos = np.zeros
 
         def _on_kmer_length_changed():
             self.kmer_length = self.__get_kmer_length_selected()
@@ -50,7 +49,7 @@ class OWChaosGame(widget.OWWidget):
 
         gui.comboBox(self.controlBox, self, 'kmer_length_idx',
              orientation=Qt.Horizontal,
-             label='Kmer length:',
+             label='k-mer length:',
              items=[i[0] for i in KMER_LENGTHS],
              callback=_on_kmer_length_changed)
 
@@ -86,13 +85,13 @@ class OWChaosGame(widget.OWWidget):
 
         # In data error checking.
         if data == None:
-            return
+            self.sequence = None
         elif any(type(d.list[0]) != str for d in data):
             self.error(typerrmsg)
-            return
-
-        self.sequence = ''.join([d.list[0] for d in data])
-        self.plot_cgr()
+            self.sequence = None
+        else:
+            self.sequence = ''.join([d.list[0] for d in data])
+            self.plot_cgr()
 
     def __cgr(self):
         if self.scoring_idx == 0:
