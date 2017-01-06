@@ -35,19 +35,19 @@ def cgr(probabilities, kmer_length):
     for kmer, prob in probabilities.items():
         x_max = size
         y_max = size
-        x_pos = 1
-        y_pos = 1
+        x_pos = 0
+        y_pos = 0
 
         for c in kmer:
-            if c == 'T':
+            if c == 'G':
                 x_pos += x_max / 2
             elif c == 'C':
                 y_pos += y_max / 2
-            elif c == 'G':
+            elif c == 'T':
                 x_pos += x_max / 2
                 y_pos += y_max / 2
 
             x_max /= 2
             y_max /= 2
-        chaos[int(x_pos) - 1, int(y_pos) - 1] = prob
+        chaos[int(x_pos), int(y_pos)] = prob
     return chaos
