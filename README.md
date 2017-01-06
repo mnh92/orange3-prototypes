@@ -12,7 +12,7 @@ in a two dimensional image. It was first proposed by [H. Joel Jeffrey in 1990](h
 
 In the case of genome data, the CGR image displays the abundance of
 all k-mers in a genome string for a chosen k. The image contains
-![equation](http://www.sciweavers.org/upload/Tex2Img_1483706890/render.png) boxes in a grid, each representing a specific k-mer. The
+4<sup>k</sup> boxes in a grid, each representing a specific k-mer. The
 boxes are colored from white, meaning this k-mer is not present, to
 black, meaning this k-mer is the most abundant.
 
