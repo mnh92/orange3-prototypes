@@ -27,7 +27,7 @@ recursively, which can be seen in the next picture:
 
 The k-mers in the given sequence are counted and the image is colored accordingly.
 For example, here is a part of the 6-mer Chaos Game Representation, where the 6-mer
-ATAAAA with the score 912 is the most abdundant and the 6-mer AGCCCG with the score 3 is the least abdundant:
+ATAAAA with the score 912 is the most abundant and the 6-mer AGCCCG with the score 3 is the least abundant:
 
 ![alt tag](https://bostjan-cigan.com/wp-content/uploads/2016/05/kmer_table_.png)
 
