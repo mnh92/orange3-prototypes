@@ -112,8 +112,8 @@ class OWChaosGame(widget.OWWidget):
             is_dna = n_t >= n_u
 
             if n_u != 0 and n_t != 0:
-                seq_type = "DNA" if is_dna else "RNA"
-                warn_msg += "Sequnece is ambiguous! Assuming it's a %s sequence. " % seq_type
+                seq_type = " DNA" if is_dna else "n RNA"
+                warn_msg += "Sequnece is ambiguous! Assuming it's a%s sequence. " % seq_type
 
             alpha_re = r'[^ACGT]' if is_dna else r'[^ACGU]'
             seq = re.sub(r'\s+', '', seq, flags = re.UNICODE)
