@@ -161,7 +161,7 @@ class OWChaosGame(widget.OWWidget):
         else:
             probabilities = chaosgame.log_odds(self.sequence, self.kmer_length)
 
-        return chaosgame.cgr(probabilities, self.kmer_length, log=True)
+        return chaosgame.cgr(probabilities, self.kmer_length, log=self.scoring_idx == 2)
 
     def plot_cgr(self):
         if self.sequence is None:
