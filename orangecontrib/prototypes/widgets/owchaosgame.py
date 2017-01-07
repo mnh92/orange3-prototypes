@@ -79,6 +79,10 @@ class OWChaosGame(widget.OWWidget):
 
         colormap = pg.ColorMap(pos=np.linspace(0.0, 1.0, 2), color=colors)
         self.imview.setColorMap(colormap)
+        self.imview.scene.sigMouseMoved.connect(self.__mouse_moved)
+        self.imview.ui.histogram.setEnabled(False)
+        self.imview.ui.menuBtn.hide()
+        self.imview.ui.roiBtn.hide()
 
         self.mainArea.layout().addWidget(self.imview)
         self.plot_cgr()
@@ -86,7 +90,7 @@ class OWChaosGame(widget.OWWidget):
     def __get_kmer_length_selected(self):
         return KMER_LENGTHS[self.kmer_length_idx][1]
 
-    def update_kmer_table(self):
+    def __update_kmer_table(self):
         size = int(math.sqrt(4 ** self.kmer_length))
         self.kmers = {}
         all_kmers = [''.join(c) for c in \
@@ -108,7 +112,6 @@ class OWChaosGame(widget.OWWidget):
                 x_max /= 2
                 y_max /= 2
             self.kmers[int(x_pos), int(y_pos)] = kmer
-
 
     def set_data(self, data):
         typerr_msg = 'Invalid data type! This widget is expecting strings.'
@@ -140,10 +143,10 @@ class OWChaosGame(widget.OWWidget):
 
             if n_u != 0 and n_t != 0:
                 seq_type = " DNA" if is_dna else "n RNA"
-                warn_msg += "Sequnece is ambiguous! Assuming it's a%s sequence. " % seq_type
+                warn_msg += "Sequence is ambiguous! Assuming it's a%s sequence. " % seq_type
 
             alpha_re = r'[^ACGT]' if is_dna else r'[^ACGU]'
-            seq = re.sub(r'\s+', '', seq, flags = re.UNICODE)
+            seq = re.sub(r'\s+', '', seq, flags=re.UNICODE)
             oldseq = seq
             seq = re.sub(alpha_re, '', seq)
             if len(oldseq) != len(seq):
@@ -163,16 +166,7 @@ class OWChaosGame(widget.OWWidget):
 
         return chaosgame.cgr(probabilities, self.kmer_length, log=self.scoring_idx == 2)
 
-    def plot_cgr(self):
-        if self.sequence is None:
-            return
-        self.imview.clear()
-        self.update_kmer_table()
-        chaos = self.__cgr()
-        self.imview.setImage(chaos)
-        self.imview.scene.sigMouseMoved.connect(self.mouseMoved)
-
-    def mouseMoved(self, viewPos):
+    def __mouse_moved(self, viewPos):
         data = self.imview.image
         nRows, nCols = data.shape
         scenePos = self.imview.getImageItem().mapFromScene(viewPos)
@@ -187,3 +181,11 @@ class OWChaosGame(widget.OWWidget):
             self.infoa.setText("k-mer coord: (%d, %d)\n\nK-mer: %s\n\nValue: %s" % (col, row, self.kmers[row, col], valuestr))
         else:
             self.infoa.setText("Hover over image\nto get k-mer value.")
+
+    def plot_cgr(self):
+        if self.sequence is None:
+            return
+        self.imview.clear()
+        self.__update_kmer_table()
+        chaos = self.__cgr()
+        self.imview.setImage(chaos)
