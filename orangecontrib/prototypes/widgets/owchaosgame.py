@@ -171,7 +171,7 @@ class OWChaosGame(widget.OWWidget):
         scenePos = self.imview.getImageItem().mapFromScene(viewPos)
         row, col = int(scenePos.x()), int(scenePos.y())
 
-        if (0 <= row < nRows) and (0 <= col < nCols):
+        if (0 <= scenePos.x() < nRows) and (0 <= scenePos.y() < nCols):
             value = data[row, col]
             if self.scoring_idx == 0:
                 valuestr = "%d" % value
