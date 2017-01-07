@@ -79,7 +79,6 @@ class OWChaosGame(widget.OWWidget):
 
         colormap = pg.ColorMap(pos=np.linspace(0.0, 1.0, 2), color=colors)
         self.imview.setColorMap(colormap)
-        self.imview.scene.sigMouseMoved.connect(self.__mouse_moved)
         self.imview.ui.histogram.setEnabled(False)
         self.imview.ui.menuBtn.hide()
         self.imview.ui.roiBtn.hide()
@@ -189,3 +188,5 @@ class OWChaosGame(widget.OWWidget):
         self.__update_kmer_table()
         chaos = self.__cgr()
         self.imview.setImage(chaos)
+        self.imview.scene.sigMouseMoved.connect(self.__mouse_moved)
+
