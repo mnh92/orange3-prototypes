@@ -1,5 +1,6 @@
 import numpy as np
 import pyqtgraph as pg
+import re
 
 from ..chaos import chaosgame
 
@@ -83,14 +84,15 @@ class OWChaosGame(widget.OWWidget):
     def set_data(self, data):
         typerrmsg = 'Invalid data type! This widget is expecting strings.'
         self.error()
+        #self.warning()
         self.imview.clear()
 
-        # In data error checking.
+        # data type checking.
         seq = ''
         if data == None:
             self.sequence = None
         elif any(type(d.list[0]) != str for d in data):
-            self.error(typerrmsg)
+            self.warning(typerrmsg)
             self.sequence = None
         else:
             for d in data:
@@ -98,6 +100,13 @@ class OWChaosGame(widget.OWWidget):
                     continue
                 else:
                     seq += d.list[0]
+
+            seq = re.sub(r'\s+', '', seq, flags = re.UNICODE)
+            oldseq = seq
+            seq = re.sub(r'[^ACGT]', '', seq)
+            if len(oldseq) != len(seq):
+                self.warning('Removed invalid characters from data! Only A, C, G and T allowed!')
+
         self.sequence = seq
         self.plot_cgr()
 
