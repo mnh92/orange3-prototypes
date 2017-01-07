@@ -161,7 +161,7 @@ class OWChaosGame(widget.OWWidget):
         else:
             probabilities = chaosgame.log_odds(self.sequence, self.kmer_length)
 
-        return chaosgame.cgr(probabilities, self.kmer_length)
+        return chaosgame.cgr(probabilities, self.kmer_length, log=True)
 
     def plot_cgr(self):
         if self.sequence is None:
@@ -183,7 +183,7 @@ class OWChaosGame(widget.OWWidget):
             if self.scoring_idx == 0:
                 valuestr = "%d" % value
             else:
-                valuestr = "%.5f" % value
+                valuestr = "%.5f" % value if value > -1e100 else "-Inf"
             self.infoa.setText("k-mer coord: (%d, %d)\n\nK-mer: %s\n\nValue: %s" % (col, row, self.kmers[row, col], valuestr))
         else:
             self.infoa.setText("Hover over image\nto get k-mer value.")
