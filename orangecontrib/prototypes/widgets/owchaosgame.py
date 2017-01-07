@@ -43,8 +43,8 @@ class OWChaosGame(widget.OWWidget):
         self.sequence = None
 
         self.box = gui.widgetBox(self.controlArea, "Info")
-        self.infoa = gui.widgetLabel(self.box, 'Hover over image\nto get kmer value.')
-        
+        self.infoa = gui.widgetLabel(self.box, 'Hover over image\nto get k-mer value.')
+
         def _on_kmer_length_changed():
             self.kmer_length = self.__get_kmer_length_selected()
             self.plot_cgr()
@@ -104,7 +104,7 @@ class OWChaosGame(widget.OWWidget):
             probabilities = chaosgame.log_odds(self.sequence, self.kmer_length)
 
         return chaosgame.cgr(probabilities, self.kmer_length)
-		
+
     def __cgr_kmers(self):
         if self.scoring_idx == 0:
             probabilities = chaosgame.raw_count(self.sequence, self.kmer_length)
@@ -127,12 +127,17 @@ class OWChaosGame(widget.OWWidget):
 
     def mouseMoved(self, viewPos):
         data = self.imview.image
-        nRows, nCols = data.shape 
+        nRows, nCols = data.shape
         scenePos = self.imview.getImageItem().mapFromScene(viewPos)
         row, col = int(scenePos.x()), int(scenePos.y())
 
         if (0 <= row < nRows) and (0 <= col < nCols):
             value = data[row, col]
-            self.infoa.setText("K-mer coord: (%d, %d),\n\nK-mer: %s\n\nValue: %.5f" % (col, row, kmers[row][col], value))            
+            valuestr = ""
+            if self.scoring_idx == 0:
+                valuestr = "%d" % value
+            else:
+                valuestr = "%.5f" % value
+            self.infoa.setText("k-mer coord: (%d, %d),\n\nK-mer: %s\n\nValue: %s" % (col, row, kmers[row][col], valuestr))
         else:
-            self.infoa.setText("Hover over image\nto get kmer value.")
+            self.infoa.setText("Hover over image\nto get k-mer value.")
