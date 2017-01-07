@@ -31,7 +31,6 @@ def log_odds(sequence, kmer_length):
 def cgr(probabilities, kmer_length):
     size = int(math.sqrt(4 ** kmer_length))
     chaos = np.zeros((size, size))
-    kmers = {}
 
     for kmer, prob in probabilities.items():
         x_max = size
@@ -51,5 +50,4 @@ def cgr(probabilities, kmer_length):
             x_max /= 2
             y_max /= 2
         chaos[int(x_pos), int(y_pos)] = prob
-        kmers[int(x_pos), int(y_pos)] = kmer
-    return chaos, kmers
+    return chaos

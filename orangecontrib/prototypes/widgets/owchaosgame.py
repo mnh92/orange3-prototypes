@@ -1,13 +1,14 @@
 import numpy as np
 import pyqtgraph as pg
 import re
+import math
+import itertools
 
 from ..chaos import chaosgame
 
 from PyQt4.QtCore import Qt
 from Orange.data import Table
 from Orange.widgets import widget, gui, settings
-
 
 KMER_LENGTHS = (
     ('2', 2),
@@ -40,6 +41,7 @@ class OWChaosGame(widget.OWWidget):
         super().__init__()
 
         self.kmers = {}
+        self.alphabet = []
 
         self.kmer_length = self.__get_kmer_length_selected()
 
@@ -84,6 +86,30 @@ class OWChaosGame(widget.OWWidget):
     def __get_kmer_length_selected(self):
         return KMER_LENGTHS[self.kmer_length_idx][1]
 
+    def update_kmer_table(self):
+        size = int(math.sqrt(4 ** self.kmer_length))
+        self.kmers = {}
+        all_kmers = [''.join(c) for c in \
+                     itertools.product(self.alphabet, repeat=self.kmer_length)]
+
+        for kmer in all_kmers:
+            x_max = size
+            y_max = size
+            x_pos = 0
+            y_pos = 0
+            for c in kmer:
+                if c == 'G':
+                    x_pos += x_max / 2
+                elif c == 'C':
+                    y_pos += y_max / 2
+                elif c == 'T' or c == 'U':
+                    x_pos += x_max / 2
+                    y_pos += y_max / 2
+                x_max /= 2
+                y_max /= 2
+            self.kmers[int(x_pos), int(y_pos)] = kmer
+
+
     def set_data(self, data):
         typerr_msg = 'Invalid data type! This widget is expecting strings.'
         warn_msg = ''
@@ -110,6 +136,7 @@ class OWChaosGame(widget.OWWidget):
             n_t = seq.count('T')
 
             is_dna = n_t >= n_u
+            self.alphabet = ['A', 'C', 'G', 'T'] if is_dna else ['A', 'C', 'G', 'U']
 
             if n_u != 0 and n_t != 0:
                 seq_type = " DNA" if is_dna else "n RNA"
@@ -140,7 +167,8 @@ class OWChaosGame(widget.OWWidget):
         if self.sequence is None:
             return
         self.imview.clear()
-        chaos, self.kmers = self.__cgr()
+        self.update_kmer_table()
+        chaos = self.__cgr()
         self.imview.setImage(chaos)
         self.imview.scene.sigMouseMoved.connect(self.mouseMoved)
 
