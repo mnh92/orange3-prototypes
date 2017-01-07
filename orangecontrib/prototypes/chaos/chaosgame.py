@@ -44,7 +44,7 @@ def cgr(probabilities, kmer_length):
                 x_pos += x_max / 2
             elif c == 'C':
                 y_pos += y_max / 2
-            elif c == 'T':
+            elif c == 'T' or c == 'U':
                 x_pos += x_max / 2
                 y_pos += y_max / 2
 
@@ -53,4 +53,3 @@ def cgr(probabilities, kmer_length):
         chaos[int(x_pos), int(y_pos)] = prob
         kmers[int(x_pos), int(y_pos)] = kmer
     return chaos, kmers
-
