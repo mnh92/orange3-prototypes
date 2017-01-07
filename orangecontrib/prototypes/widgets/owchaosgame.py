@@ -86,14 +86,20 @@ class OWChaosGame(widget.OWWidget):
         self.imview.clear()
 
         # In data error checking.
+        seq = ''
         if data == None:
             self.sequence = None
         elif any(type(d.list[0]) != str for d in data):
             self.error(typerrmsg)
             self.sequence = None
         else:
-            self.sequence = ''.join([d.list[0] for d in data])
-            self.plot_cgr()
+            for d in data:
+                if d.list[0][0] == ';':
+                    continue
+                else:
+                    seq += d.list[0]
+        self.sequence = seq
+        self.plot_cgr()
 
     def __cgr(self):
         if self.scoring_idx == 0:
