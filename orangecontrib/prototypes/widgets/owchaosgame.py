@@ -144,6 +144,6 @@ class OWChaosGame(widget.OWWidget):
                 valuestr = "%d" % value
             else:
                 valuestr = "%.5f" % value
-            self.infoa.setText("k-mer coord: (%d, %d),\n\nK-mer: %s\n\nValue: %s" % (col, row, kmers[row][col], valuestr))
+            self.infoa.setText("k-mer coord: (%d, %d)\n\nk-mer: %s\n\nValue: %s" % (col, row, kmers[row][col], valuestr))
         else:
             self.infoa.setText("Hover over image\nto get k-mer value.")
