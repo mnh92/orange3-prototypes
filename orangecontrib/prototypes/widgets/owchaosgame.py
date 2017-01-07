@@ -5,7 +5,7 @@ import re
 from ..chaos import chaosgame
 
 from PyQt4.QtCore import Qt
-from Orange.data import Table, StringVariable
+from Orange.data import Table
 from Orange.widgets import widget, gui, settings
 
 
@@ -23,6 +23,7 @@ SCORINGS = (
     ('log odds', 2)
 )
 
+
 class OWChaosGame(widget.OWWidget):
     name = "Chaos Game"
     description = "Visualize genome data with the Chaos Game Representation."
@@ -37,6 +38,8 @@ class OWChaosGame(widget.OWWidget):
 
     def __init__(self):
         super().__init__()
+
+        self.kmers = {}
 
         self.kmer_length = self.__get_kmer_length_selected()
 
@@ -84,7 +87,7 @@ class OWChaosGame(widget.OWWidget):
     def set_data(self, data):
         typerrmsg = 'Invalid data type! This widget is expecting strings.'
         self.error()
-        #self.warning()
+        self.warning()
         self.imview.clear()
 
         # data type checking.
@@ -92,7 +95,7 @@ class OWChaosGame(widget.OWWidget):
         if data == None:
             self.sequence = None
         elif any(type(d.list[0]) != str for d in data):
-            self.warning(typerrmsg)
+            self.error(typerrmsg)
             self.sequence = None
         else:
             for d in data:
@@ -120,24 +123,12 @@ class OWChaosGame(widget.OWWidget):
 
         return chaosgame.cgr(probabilities, self.kmer_length)
 
-    def __cgr_kmers(self):
-        if self.scoring_idx == 0:
-            probabilities = chaosgame.raw_count(self.sequence, self.kmer_length)
-        elif self.scoring_idx == 1:
-            probabilities = chaosgame.probabilities(self.sequence, self.kmer_length)
-        else:
-            probabilities = chaosgame.log_odds(self.sequence, self.kmer_length)
-
-        return chaosgame.cgr_kmers(probabilities, self.kmer_length)
-
     def plot_cgr(self):
         if self.sequence is None:
             return
         self.imview.clear()
-        chaos = self.__cgr()
+        chaos, self.kmers = self.__cgr()
         self.imview.setImage(chaos)
-        global kmers
-        kmers = self.__cgr_kmers()
         self.imview.scene.sigMouseMoved.connect(self.mouseMoved)
 
     def mouseMoved(self, viewPos):
@@ -148,11 +139,10 @@ class OWChaosGame(widget.OWWidget):
 
         if (0 <= row < nRows) and (0 <= col < nCols):
             value = data[row, col]
-            valuestr = ""
             if self.scoring_idx == 0:
                 valuestr = "%d" % value
             else:
                 valuestr = "%.5f" % value
-            self.infoa.setText("k-mer coord: (%d, %d)\n\nk-mer: %s\n\nValue: %s" % (col, row, kmers[row][col], valuestr))
+            self.infoa.setText("k-mer coord: (%d, %d)\n\nK-mer: %s\n\nValue: %s" % (col, row, self.kmers[row, col], valuestr))
         else:
             self.infoa.setText("Hover over image\nto get k-mer value.")
