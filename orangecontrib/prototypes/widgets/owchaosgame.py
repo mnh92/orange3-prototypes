@@ -151,8 +151,9 @@ class OWChaosGame(widget.OWWidget):
             if len(oldseq) != len(seq):
                 warn_msg += 'Removed invalid characters from data!'
 
+            self.sequence = seq
+
         self.warning(warn_msg)
-        self.sequence = seq
         self.plot_cgr()
 
     def __cgr(self):
@@ -166,6 +167,8 @@ class OWChaosGame(widget.OWWidget):
         return chaosgame.cgr(probabilities, self.kmer_length, log=self.scoring_idx == 2)
 
     def __mouse_moved(self, viewPos):
+        if self.sequence is None:
+            return
         data = self.imview.image
         nRows, nCols = data.shape
         scenePos = self.imview.getImageItem().mapFromScene(viewPos)
@@ -189,4 +192,3 @@ class OWChaosGame(widget.OWWidget):
         chaos = self.__cgr()
         self.imview.setImage(chaos)
         self.imview.scene.sigMouseMoved.connect(self.__mouse_moved)
-
