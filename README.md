@@ -7,7 +7,7 @@ This is an implementation of a prototype widget that visualizes the sequences.
 The Chaos Game Representation
 -----------------------------
 
-This widget uses the Chaos Game Representation (CGR) to visualize genome data. The CGR is a method that visualizes one-dimensional data
+The Chaos Game Representation (CGR) is a method that visualizes one-dimensional data
 in a two dimensional image. It was first proposed by [H. Joel Jeffrey in 1990](http://nar.oxfordjournals.org/content/18/8/2163.full.pdf+html).
 
 In the case of genome data, the CGR image displays the abundance of
@@ -34,8 +34,16 @@ ATAAAA with the score 912 is the most abundant and the 6-mer AGCCCG with the sco
 The Widget
 ----------
 
-The widget has two controls, one for setting the k-mer length and
-another for setting the counting scheme.
+We implemented our widget in [Orange](http://orange.biolab.si/). It uses the Chaos Game Representation (CGR) to visualize genome data.
+It accepts a file that contains the string of the genome sequence as input and then visualizes it with the [pyqtgraph](http://www.pyqtgraph.org/) library.
+
+The GUI consists of two control panels on the left. One is for setting the k-mer length and counting scheme, 
+the other one is for displaying the coordinates, sequence and value of each k-mer as the user hovers over it with the mouse.
+The image representing the visualization of the sequence is in the center of the widget. On the right, the legend
+shows which values are represented with which color. In the next image showing the widget's GUI, the user hovered over
+the k-mer ATCT, which has the coordinates (7,5), the value of 0.00483 and is thus colored with the shade of gray seen in the legend.
+
+![alt tag](http://i.imgur.com/LBtWmzl.jpg)
 
 Setting the k-mer length changes the length (k) of the k-mers being
 counted. A higher k will produce an image with more cells.
